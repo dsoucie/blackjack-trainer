@@ -1,0 +1,25 @@
+body {
+  color: green;
+  background: #000;
+}
+
+button {
+  color: green;
+  background: #333;
+  height: 50px;
+  width: 200px;
+}
+
+.displayArea {
+  display: flex;
+}
+
+.seat {
+  margin: 50px;
+}
+
+.buttonArea {
+  display: flex;
+  width: 100vw;
+}
+
