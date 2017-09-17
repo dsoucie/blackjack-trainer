@@ -24,10 +24,11 @@ export function createDealerHand() {
   }
 }
 
-export function dealToPlayer(doubleDown) {
+export function dealToPlayer(doubleDown, split) {
   return {
     type: 'DEAL_TO_PLAYER',
     doubleDown,
+    split,
   }
 }
 
@@ -58,7 +59,23 @@ export function clearTable(chipChange) {
   }
 }
 
+export function split() {
+  return {
+    type: 'SPLIT',
+  }
+}
 
+export function splitHandDealt() {
+  return {
+    type: 'SPLIT_HAND_DEALT',
+  }
+}
+
+export function clearBet() {
+  return {
+    type: 'CLEAR_BET',
+  }
+}
 // export function () {
 //   return {
 //     type: '',

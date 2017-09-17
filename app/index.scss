@@ -1,0 +1,173 @@
+$green: #40C440;
+/* Header */
+.Header {
+  display: flex;
+  width: 100vw;
+  height: 8vh;
+  align-items: center;
+  border-bottom: 1px solid black;
+  justify-content: flex-start;
+  font-family: sans-serif;
+  font-weight: bold;
+
+  div {
+    font-size: 4vh;
+    line-height: 4vh;
+  } 
+
+  .headerButton {
+    font-size: 2vh;
+    background-color: $green;
+    color: white;
+    height: 4vh;
+    border-radius: 1vh;
+    width: 8vw;
+    text-align: center;
+    line-height: 4vh;
+    margin-left: 60vw;
+  }
+
+  .hb2 {
+    margin-left: 3vw;
+  }
+}
+//Seat
+.Table {
+  background: $green;
+  display: flex;
+  height: 65vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .Seat {
+    height: 25vh;
+    width: 90vw;
+    margin-top: 1vh;
+    // border: 5px solid white;
+    border-radius: 5px;
+  }
+  
+}
+/*
+button {
+  color: green;
+  background: #333;
+  height: 50px;
+  width: 100px;
+}
+
+.buttonPlaceHolder {
+  color: green;
+  background: #333;
+  height: 50px;
+  width: 100px;
+}
+
+.displayArea {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 75vh;
+  justify-content: center;
+}
+*/
+//Betting Area Below
+.BetButtonContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.BetButton {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 2vh;
+  line-height: 4vh;
+  text-align: center;
+  border-radius: 1vh;
+  margin: 1vh;
+  width: 10vw;
+  height: 4vh;
+  background: $green;
+  color: white;
+}
+
+.ClearButton {
+  background: #BE4E4E;
+}
+
+.BettingArea {
+  display: table;
+  margin: 0 auto;
+  text-align: center;
+  .chipContainer {
+    display: flex;
+  }
+}
+//Betting Area Above
+
+//chipbank below
+.ChipBank {
+  position: absolute;
+  bottom: 1vh;
+  padding: none;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  height: 8vh;
+  text-align: center;
+  border: 5px solid black;
+  border-radius: 2vh;
+  width: 15vw;
+  background: darkblue;
+  color: gold;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.8vh;
+  p {
+    margin: none;
+    padding: none;
+  }
+
+}
+//chipbank above
+.seat {
+  margin: 25px;
+  border: 5px solid red;
+  border-radius: 50px;
+  min-width: 300px;
+  min-height: 300px;
+
+}
+
+.hand {
+  margin: 20px;
+  padding: 20px;
+  border: 5px solid white;
+  border-radius: 5px;
+  min-height: 150px;
+  min-width: 200px;
+}
+
+.buttonArea {
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+}
+
+input {
+  width: 100px;
+}
+
+.active {
+  border: 5px solid gold;
+
+}
+
+img {
+  width: 100px;
+}
+
+.pocket {
+  display: flex;
+  justify-content: center;
+}

@@ -1,5 +1,5 @@
 const cardDeck = [
-  //spades
+  // spades
   {
     suit: 'spades',
     name: 'ace',

@@ -8,8 +8,8 @@ import { Provider } from 'react-redux';
 import AppContainer from './AppContainer';
 //import store
 import store, { history } from './store'
-//import css
-import css from './index.css';
+//import scss
+import scss from './index.scss';
 
 const router = (
   <Provider store={store} >

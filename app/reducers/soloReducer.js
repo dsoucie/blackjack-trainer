@@ -17,17 +17,19 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         shoe: action.shuffledShoe,
       };
     case 'PLACE_BET':
+    var currentBet = state.currentBet;
+    var newBet = currentBet + action.bet;
       return {
         ...state,
-        currentBet: action.bet,
+        currentBet: newBet,
       };
     case 'CREATE_PLAYER_HAND':
       var { playerHands, currentBet, currentHand, chipBank } = state;
       var newHand = {
         cards: [],
         status: '',
-        handValue: 0,
         betAmount: currentBet,
+        handValue: 0,
       };
       playerHands = [
         ...playerHands.slice(0, currentHand + 1),
@@ -119,6 +121,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
       var { shoe, shoePosition, playerHands, currentHand,
          dealersTurn} = state;
       var card = shoe[shoePosition];
+
       playerHands[currentHand].cards.push(card);
       ////
       var hand = playerHands[currentHand].cards;
@@ -221,6 +224,54 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           currentHand: 0,
           chipBank: chipBank + action.chipChange,
         }
+      case 'SPLIT':
+        var {currentHand, playerHands, currentBet, chipBank } = state;
+
+        var handToSplit = {
+          ...playerHands[currentHand]
+        };
+
+        var cardToMove = {
+          ...handToSplit.cards[1],
+        };
+
+        handToSplit.cards.splice(1, 1);
+
+        var newHand = {
+          cards: [cardToMove],
+          status: 'split',
+          betAmount: currentBet,
+          handValue: 0,
+
+        }
+
+        chipBank -= currentBet;
+
+        playerHands = [
+          ...playerHands.slice(0, currentHand),
+          handToSplit,
+          newHand,
+          ...playerHands.slice(currentHand + 1),
+        ]
+
+        return {
+          ...state,
+          playerHands,
+          chipBank,
+        }
+      case 'SPLIT_HAND_DEALT':
+        var { playerHands, currentHand, } = state;
+
+        playerHands[currentHand].status = '';
+        return {
+          ...state,
+          playerHands,
+        }
+      case 'CLEAR_BET':
+        return {
+          ...state,
+          currentBet: 0,
+        }
     default:
       return state;
   }
@@ -228,7 +279,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
 
 export default soloReducer;
 
-    // case '': 
+    // case 'SPLIT_HAND_DEALT':
     //   return {
 
     // }

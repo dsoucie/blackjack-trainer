@@ -1,33 +1,65 @@
 import React from 'react';
 import cardDeck from './cardDeck';
 
+//component import
+import Header from './components/Header';
+import Table from './components/Table';
+import Hands from './components/Hands';
+import Seat from './components/Seat';
+import BettingArea from './components/BettingArea';
+import Chips from './components/Chips';
+import ChipBank from './components/ChipBank';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      betInput: '',
-    }
   }
 
   componentDidUpdate() {
+    console.log('component did update');
+    //define store stuff
+    const { dealersTurn, dealerHands, playerHands, currentHand } = this.props.appState;
+
+    const { setDealersTurn, splitHandDealt } = this.props;
+    ////////
+    //splits
     try {
-      const { dealersTurn, dealerHands, playerHands, } = this.props.appState;
+      console.log('inside splits try');
+      if (playerHands[currentHand].status == 'split') {
+        
+        setTimeout(() => {
+          this.props.dealToPlayer();
+        }, 500);
+        splitHandDealt();
 
-      const { setDealersTurn } = this.props;
-
-      //did player completely bust out
+      } 
+    } catch (error) {
+      console.log('splits error:', error);
+    }
+    //////////
+    //bustouts and blackjack outs
+    var bustOut;
+    try {
       let bustCount = 0;
-      playerHands.forEach( (hand) => {
-        if (hand.status == 'busted') {
+      playerHands.forEach((hand) => {
+        if (hand.status == 'busted' || hand.status == 'blackjack') {
           bustCount++;
         }
       });
-      var bustOut;
+      
       bustCount == playerHands.length && bustCount != 0 ? bustOut = true : bustOut = false;
-      //TODO DOES PLAYER HAVE BLACKJACK
+    } catch (error) {
+      console.log('bustouts error:', error);
+    }
+    ///////////
+    //blackjack
+    try {
 
-      console.log('dealersTurn: ', dealersTurn);
+    } catch (error) {
+      console.log('blackjack error:', error);
+    }
+    try {
       if (dealersTurn || bustOut) {
         if (dealerHands[0].handValue >= 17 || bustOut) {
           this.showdown();
@@ -39,8 +71,7 @@ class App extends React.Component {
       } else {
         var completedPlayerHandCount = 0;
         playerHands.forEach((hand) => {
-          console.log('cphc', hand.status);
-          if (hand.status != '') {
+          if (hand.status != '' && hand.status != 'split') {
             completedPlayerHandCount++;
             console.log('completedPlayerHandCount:', completedPlayerHandCount)
           }
@@ -51,7 +82,7 @@ class App extends React.Component {
         }
       }
     } catch (e) {
-      console.log('this error was thrown because hand doesn\'t exist yet. no worrores');
+      console.log('error was thrown in third try: ', e);
     }
     
   }
@@ -62,20 +93,24 @@ class App extends React.Component {
     var chipChange = 0;
     playerHands.forEach( (hand) => {
       var bet = hand.betAmount;
-      console.log('hand.currentBet in showdown:', hand.betAmount)
+      console.log('hand.betAmount in showdown:', hand.betAmount)
       if (hand.status == 'blackjack' && dealersHand.status != 'blackjack') {
         console.log('blackjack! payout 3:2')
         bet = ((bet / 2) * 3) + bet;
+        console.log('chipChange:', chipChange);
         chipChange += bet;
       } else if (hand.status == 'blackjack' && dealersHand.status == 'blackjack') {
         console.log('its a bj push!');
         chipChange += bet;
+        console.log('chipChange:', chipChange);
       } else if (hand.status == 'busted') {
-        console.log('player busts!')
+        console.log('player busts!');
+        console.log('chipChange:', chipChange);
         //do loss here
       } else if (dealersHand.status == 'busted' && hand.status != 'busted') {
         console.log('player wins!');
         chipChange += (2 * bet)
+        console.log('chipChange:', chipChange);
       } else if (dealersHand.handValue > hand.handValue) {
         console.log('dealer is closer to 21, dealer wins');
         //do loss here
@@ -91,6 +126,7 @@ class App extends React.Component {
       }
     })
 
+    console.log('showdown chipChange Passed', chipChange);
     setTimeout( () => {
       this.props.clearTable(chipChange);
     }, 5000);
@@ -161,12 +197,40 @@ class App extends React.Component {
     const { shoe } = this.props.appState;
 
     if (shoe.length == 0) {
-      this.props.placeBet(this.state.betInput);
       this.initialShuffleAndDeal();
     } else {
-      this.props.placeBet(this.state.betInput);
       this.initialDeal();
     }
+  }
+
+  clickSplit = () => {
+    console.log('split clicked');
+    const { playerHands, currentHand } = this.props.appState;
+    const { split, dealToPlayer } = this.props;
+
+    if (playerHands[currentHand].cards.length == 2 && 
+      playerHands[currentHand].cards[0].value == playerHands[currentHand].cards[1].value
+    ) {
+      console.log('split executing');
+      split();
+      setTimeout( () => {
+        dealToPlayer();
+      }, 500);
+    }
+  }
+
+  clickDoubleDown = () => {
+    console.log('doubling Down')
+    const { playerHands, currentHand } = this.props.appState;
+    const { dealToPlayer } = this.props;
+
+
+    if (playerHands[currentHand].cards.length == 2 ) {
+      dealToPlayer(true);
+    } else {
+      console.log('can\'t double down if you already hit');
+    }
+    
   }
 
   render() {
@@ -178,42 +242,93 @@ class App extends React.Component {
       dealToDealer,
       dealToPlayer,
       stand,
+      clearBet
                           } = this.props;
 
     const {
       dealerHands,
       playerHands,
       chipBank,
+      dealersTurn,
+      currentHand,
+      currentBet,
                           } = this.props.appState;
 
 
-    const betInput = this.state.betInput;
+    var betButton = <div className='BetButton'></div>;
+    var betInputField = <div className='BetButton'></div>; 
+    var splitButton = <div className='BetButton'></div>;
+    var doubleDownButton = <div className='BetButton'></div>;
+    var hitButton = <div className='BetButton'></div>;
+    var standButton = <div className='BetButton'></div>;
+    var allTheButtons;
 
+    
+
+
+    if (playerHands.length >= 1) {
+      hitButton = <div className='BetButton' onClick={dealToPlayer}>Hit</div>;
+      standButton = <div className='BetButton' onClick={stand}>Stand</div>;
+    }
+
+    if (playerHands.length < 1) {
+      betButton = 
+      <div>
+        <div className='BetButtonContainer'>
+          <div className='BetButton'onClick={this.clickPlaceBet}>Bet: ${currentBet}</div>
+          <div className='BetButton ClearButton' onClick={clearBet} >Clear Bet</div> 
+        </div>
+        <BettingArea
+          currentBet={currentBet}
+          placeBet={placeBet}
+          clearBet={clearBet}
+        />
+      </div>;
+      
+    } else if (playerHands[currentHand].cards.length == 2) {
+      doubleDownButton = <div className='BetButton' onClick={this.clickDoubleDown}>Double Down</div>;
+      if (playerHands[currentHand].cards[0].value == playerHands[currentHand].cards[1].value) {
+        splitButton = <div className='BetButton' onClick={this.clickSplit}>Split</div>;
+      }
+    }
+    
+    if (playerHands.length == 0 ) {
+      allTheButtons = betButton
+    } else {
+      allTheButtons = 
+      <div className='buttonArea'>
+        {/*all buttons only appear when needed*/}
+        {splitButton}
+        {doubleDownButton}
+        {hitButton}
+        {standButton}
+      </div>
+    }
+    
     return (
       
-      <div>
-        <div className='displayArea'>
-          <div className='seat'>
-            <h2>Dealer's Hand</h2>
-            <pre>{JSON.stringify(dealerHands, null, 2)}</pre>
-          </div>
-          <div className='seat'>
-            <h2>Player's Hand</h2>
-            <pre>{JSON.stringify(playerHands, null, 2)}</pre>
-          </div>
+
+      <div className='App'>
+        <Header />
+        <div className='Table'>
+          <Seat 
+            hands={dealerHands}
+            dealersTurn={dealersTurn}
+            who='dealer'
+            currentHand={currentHand}
+          />
+          <Seat 
+            hands={playerHands}
+            dealersTurn={dealersTurn}
+            who='player'
+            currentHand={currentHand}
+          />
         </div>
-        <div className='buttonArea'>
-          
-          <input type='number' onChange={this.handleChange} value={betInput || ''} />
-          <button onClick={this.clickPlaceBet}>Place Bet</button>
-          <br />
-          <button onClick={dealToPlayer.bind(null, true)}>Double Down</button>
-          <br />
-          <button onClick={dealToPlayer}>Hit</button>
-          <br />
-        <button onClick={stand}>Stand</button>
-        </div>
-       <p>ChipBank: {chipBank}</p>
+        
+        {allTheButtons}
+
+        <ChipBank chipBank={chipBank}/>
+
       </div>
       
     );
