@@ -76,6 +76,14 @@ export function clearBet() {
     type: 'CLEAR_BET',
   }
 }
+
+export function updateWinners(playerHands) {
+  return {
+    type: 'UPDATE_WINNERS',
+    playerHands,
+  }
+}
+
 // export function () {
 //   return {
 //     type: '',

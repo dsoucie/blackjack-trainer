@@ -30,6 +30,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         status: '',
         betAmount: currentBet,
         handValue: 0,
+        result: '',
       };
       playerHands = [
         ...playerHands.slice(0, currentHand + 1),
@@ -271,6 +272,12 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         return {
           ...state,
           currentBet: 0,
+        }
+      case 'UPDATE_WINNERS':
+
+        return {
+          ...state,
+          playerHands: action.playerHands,
         }
     default:
       return state;

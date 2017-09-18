@@ -18,7 +18,9 @@ export default class Seat extends React.Component {
 
           return <div className={handClassName} key={index}>{hand.cards.map((card, index) => {
             return (dealersTurn || who != 'dealer' || index != 1) ? <img key={index} src={`https://s3-us-west-2.amazonaws.com/www.soucie.org/playingcards/${card.name}_of_${card.suit}.svg`} /> : <img key={index} className='cardImage' src='https://s3-us-west-2.amazonaws.com/www.soucie.org/playingcards/Card_back.svg' alt='card back' />
-          })}</div>
+          })}
+            <div className='resultPanel' >{hand.result}</div>
+          </div>
         })}
       </div>
     );
