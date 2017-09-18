@@ -6,6 +6,7 @@ export default class Chips extends React.Component {
     const { amount, color, placeBet } = this.props;
 
     var outerStyle = {
+      cursor: 'pointer',
       backgroundColor: color,
       width: '5vh',
       height: '5vh',
@@ -23,6 +24,8 @@ export default class Chips extends React.Component {
       backgroundColor: 'white',
       lineHeight: '2.5vh',
       textAlign: 'center',
+      fontSize: '1.25vh',
+      fontWeight: 'bold',
     }
     return (
       <div style={outerStyle} onClick={placeBet.bind(null, amount)} >

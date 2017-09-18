@@ -8,8 +8,8 @@ export default class ChipBank extends React.Component {
     
     return (
       <div className='ChipBank'>
-       <p className='chipTitle' >Chips</p>
-       <p clasName='chipAmout' >{chipBank}</p>
+       <p className='chipTitle' >Chips: ${chipBank}</p>
+       {/*<p clasName='chipAmout' >{chipBank}</p>*/}
       </div>
     );
   };

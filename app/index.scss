@@ -35,12 +35,12 @@ $green: #40C440;
 .Table {
   background: $green;
   display: flex;
-  height: 65vh;
+  height: 72vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   .Seat {
-    height: 25vh;
+    height: 35vh;
     width: 90vw;
     margin-top: 1vh;
     // border: 5px solid white;
@@ -89,6 +89,7 @@ button {
   height: 4vh;
   background: $green;
   color: white;
+  cursor: pointer;
 }
 
 .ClearButton {
@@ -113,7 +114,7 @@ button {
   margin: 0 auto;
   left: 0;
   right: 0;
-  height: 8vh;
+  height: 4vh;
   text-align: center;
   border: 5px solid black;
   border-radius: 2vh;
@@ -126,6 +127,7 @@ button {
   p {
     margin: none;
     padding: none;
+    line-height: 1vh;
   }
 
 }
@@ -149,6 +151,7 @@ button {
 }
 
 .buttonArea {
+  cursor: pointer;
   display: flex;
   width: 100vw;
   justify-content: center;
@@ -164,7 +167,7 @@ input {
 }
 
 img {
-  width: 100px;
+  width: 8vw;
 }
 
 .pocket {

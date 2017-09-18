@@ -187,10 +187,10 @@ class App extends React.Component {
           this.props.dealToPlayer();
           setTimeout(() => {
             this.props.dealToDealer(true);
-          }, 1000);
-        }, 1000);
-      }, 1000);
-    }, 1000);
+          }, 500);
+        }, 500);
+      }, 500);
+    }, 500);
   }
 
   clickPlaceBet = () => {
