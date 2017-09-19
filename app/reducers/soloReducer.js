@@ -1,3 +1,5 @@
+import calculateProperMove from './calculateProperMove';
+
 export const soloReducerDefaultState = {
   shoe: [],
   shoePosition: 0,
@@ -7,6 +9,8 @@ export const soloReducerDefaultState = {
   chipBank: 10000,
   currentBet: 0,
   dealersTurn: false,
+  movesArray: [],
+  handsPriorToDeal: 0,
 };
 
 const soloReducer = (state = soloReducerDefaultState, action) => {
@@ -59,7 +63,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         dealerHands,
       }
     case 'DEAL_TO_DEALER':
-      var { shoe, shoePosition, dealerHands, dealersTurn } = state;
+      var { shoe, shoePosition, dealerHands, dealersTurn, playerHands, } = state;
       var card = shoe[shoePosition];
       if (action.flip) {
         card.side = 'back';
@@ -111,7 +115,6 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
       }
       ////end busts and blackjack
 
-      ////
       return {
         ...state,
         shoePosition: shoePosition + 1,
@@ -120,9 +123,9 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
       }    
       case 'DEAL_TO_PLAYER':
       var { shoe, shoePosition, playerHands, currentHand,
-         dealersTurn} = state;
+         dealersTurn, dealerHands, movesArray, handsPriorToDeal  } = state;
       var card = shoe[shoePosition];
-
+      var movesArrayCurrentHand = currentHand;
       playerHands[currentHand].cards.push(card);
       ////
       var hand = playerHands[currentHand].cards;
@@ -142,6 +145,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         }
 
       });
+
 
       if (action.doubleDown == true) {
         playerHands[currentHand].status = 'standing';
@@ -184,6 +188,12 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         }
       }
 
+      //if 2nd card, make new moveArray, if more than 2, update it
+      if (playerHands[currentHand].cards.length == 2) {
+        movesArray.push(calculateProperMove(dealerHands[0], playerHands[movesArrayCurrentHand]));
+      } else if (playerHands[currentHand].cards.length > 2) {
+        // movesArray[currentHand + handsPriorToDeal] = calculateProperMove(dealerHands[0], playerHands[currentHand]);
+      }
       
 
       return {
@@ -192,6 +202,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         playerHands,
         currentHand,
         dealersTurn,
+        movesArray: movesArray,
       }
       case 'PLAYER_STANDS':
         var { currentHand, playerHands, dealersTurn} = state;
@@ -215,10 +226,11 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           dealersTurn: true,
         }
       case 'CLEAR_TABLE':
-      var {playerHands, dealerHands, dealersTurn, currentHand, chipBank} = state;
+      var {playerHands, dealerHands, dealersTurn, currentHand, chipBank, handsPriorToDeal} = state;
       console.log('Clear table reducer chipChange', action.chipChange)  
       return {
           ...state,
+          handsPriorToDeal: playerHands.length + handsPriorToDeal,
           playerHands: [],
           dealerHands: [],
           dealersTurn: false,

@@ -65,7 +65,7 @@ class App extends React.Component {
         } else {
           setTimeout(() => {
             this.props.dealToDealer();
-          }, 3000);
+          }, 1000);
         }
       } else {
         var completedPlayerHandCount = 0;
@@ -143,10 +143,14 @@ class App extends React.Component {
     console.log('playerHands[0].result after', JSON.stringify(playerHands[0].result));
 
     console.log('showdown chipChange Passed', chipChange);
-    setTimeout(() => {
-      this.props.clearTable(chipChange);
-    }, 5000);
-    shouldRunUpdate ? updateWinners(playerHands) : null;
+    if (shouldRunUpdate) {
+      setTimeout(() => {
+        this.props.clearTable(chipChange, playerHands);
+      }, 5000);
+      updateWinners(playerHands);
+    }
+
+  
   }
 
   handleChange = (e) => {
@@ -269,6 +273,8 @@ class App extends React.Component {
       dealersTurn,
       currentHand,
       currentBet,
+      movesArray,
+      handsPriorToDeal,
                           } = this.props.appState;
 
 
@@ -313,13 +319,21 @@ class App extends React.Component {
       allTheButtons = betButton
     } else {
       allTheButtons =
-        <div className='buttonArea'>
-          {/*all buttons only appear when needed*/}
-          {splitButton}
-          {doubleDownButton}
-          {hitButton}
-          {standButton}
+        <div>
+          <div className='buttonArea'>
+            {/*all buttons only appear when needed*/}
+            {splitButton}
+            {doubleDownButton}
+            {hitButton}
+            {standButton}
+          </div>
+          <div className='buttonArea'>
+            <pre>
+              {JSON.stringify(movesArray[handsPriorToDeal + currentHand])}
+            </pre>
+          </div>
         </div>
+        
     }
 
     return (

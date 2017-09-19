@@ -52,10 +52,11 @@ export function setDealersTurn() {
   }
 }
 
-export function clearTable(chipChange) {
+export function clearTable(chipChange, playerHands) {
   return {
     type: 'CLEAR_TABLE',
     chipChange,
+    playerHands,
   }
 }
 
