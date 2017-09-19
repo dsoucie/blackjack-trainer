@@ -146,8 +146,11 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
 
       });
 
-
+      if (playerHands[currentHand].cards.length == 3) {
+        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[movesArrayCurrentHand].cards.length - 3].ActualMove = 'hit';
+      }
       if (action.doubleDown == true) {
+        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[movesArrayCurrentHand].cards.length - 3].ActualMove = 'doubleDown';
         playerHands[currentHand].status = 'standing';
         playerHands[currentHand].betAmount = (playerHands[currentHand].betAmount * 2)
         if (currentHand == playerHands.length - 1) {
@@ -190,9 +193,9 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
 
       //if 2nd card, make new moveArray, if more than 2, update it
       if (playerHands[currentHand].cards.length == 2) {
-        movesArray.push(calculateProperMove(dealerHands[0], playerHands[movesArrayCurrentHand]));
+        movesArray.push(calculateProperMove(dealerHands[0], playerHands[movesArrayCurrentHand], movesArray[handsPriorToDeal + movesArrayCurrentHand]));
       } else if (playerHands[currentHand].cards.length > 2) {
-        // movesArray[currentHand + handsPriorToDeal] = calculateProperMove(dealerHands[0], playerHands[currentHand]);
+        movesArray[currentHand + handsPriorToDeal] = calculateProperMove(dealerHands[0], playerHands[currentHand], movesArray[handsPriorToDeal + movesArrayCurrentHand]);
       }
       
 
@@ -205,8 +208,9 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         movesArray: movesArray,
       }
       case 'PLAYER_STANDS':
-        var { currentHand, playerHands, dealersTurn} = state;
+        var { currentHand, playerHands, dealersTurn, handsPriorToDeal, movesArray} = state;
         playerHands[currentHand].status = 'standing'
+        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].ActualMove = 'stand';
 
         if (currentHand == playerHands.length - 1) {
           dealersTurn = true;
@@ -219,6 +223,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           currentHand,
           playerHands,
           dealersTurn,
+          moveArray: movesArray,
         }
       case 'SET_DEALERS_TURN':
         return {
@@ -238,7 +243,9 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           chipBank: chipBank + action.chipChange,
         }
       case 'SPLIT':
-        var {currentHand, playerHands, currentBet, chipBank } = state;
+      var { currentHand, playerHands, currentBet, chipBank, movesArray, handsPriorToDeal } = state;
+        
+      movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].ActualMove = 'split';
 
         var handToSplit = {
           ...playerHands[currentHand]
@@ -255,6 +262,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           status: 'split',
           betAmount: currentBet,
           handValue: 0,
+          moveArray: movesArray,
 
         }
 

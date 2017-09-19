@@ -2,6 +2,7 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  devtool: 'cheap-module-source-map',
   entry: './app/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),

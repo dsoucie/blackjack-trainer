@@ -1,6 +1,5 @@
-export default function calculateProperMove(dealersHand, playersHand){
+export default function calculateProperMove(dealersHand, playersHand, handMoves = false){
   console.log('inside calc proper Hand');
-  
   const dealersUpCard = dealersHand.cards[0].value
 
   var isSplitable = false;
@@ -293,7 +292,7 @@ export default function calculateProperMove(dealersHand, playersHand){
     switch (dealersUpCard) {
       case 11:
       case 10:
-        switch (playersHand[0].value) {
+        switch (playersHand.handValue) {
           case 11:
             properMove = 'split';
             break;
@@ -318,7 +317,7 @@ export default function calculateProperMove(dealersHand, playersHand){
         break;
       case 9:
       case 8:
-        switch (playersHand[0].value) {
+        switch (playersHand.handValue) {
           case 11:
             properMove = 'split';
             break;
@@ -346,7 +345,7 @@ export default function calculateProperMove(dealersHand, playersHand){
         }
         break;
       case 7:
-        switch (playersHand[0].value) {
+        switch (playersHand.handValue) {
           case 11:
             properMove = 'split';
             break;
@@ -377,7 +376,7 @@ export default function calculateProperMove(dealersHand, playersHand){
         break;
       case 6:
       case 5:
-        switch (playersHand[0].value) {
+        switch (playersHand.handValue) {
           case 11:
             properMove = 'split';
             break;
@@ -405,7 +404,7 @@ export default function calculateProperMove(dealersHand, playersHand){
       case 4:
       case 3:
       case 2:
-        switch (playersHand[0].value) {
+        switch (playersHand.handValue) {
           case 11:
             properMove = 'split';
             break;
@@ -443,9 +442,19 @@ export default function calculateProperMove(dealersHand, playersHand){
     properMove = 'stand';
   }
 
-  return {
-    DealersUpCard: dealersUpCard,
-    playersHandValue: playersHand.handValue,
-    properMove,
-  }
+ if (!handMoves) {
+   handMoves = {
+     dealersUpCard: dealersUpCard,
+     movesThisHand: [
+       {
+         playersHandValue: playersHand.handValue,
+         properMove: properMove,
+       }
+     ],
+   }
+ } else {
+   handMoves.movesThisHand.push({playersHandValue: playersHand.handValue,properMove: properMove})
+ }
+
+  return handMoves;
 }
