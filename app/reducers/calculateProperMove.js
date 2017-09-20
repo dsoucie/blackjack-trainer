@@ -401,7 +401,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
           case 8:
           case 7:
           case 6:
-            properMove = 'spit';
+            properMove = 'split';
             break;
           case 5:
             properMove = 'doubleDown';
@@ -429,7 +429,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
           case 8:
           case 7:
           case 6:
-            properMove = 'spit';
+            properMove = 'split';
             break;
           case 5:
             properMove = 'doubleDown';
