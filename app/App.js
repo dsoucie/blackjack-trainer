@@ -34,7 +34,7 @@ class App extends React.Component {
 
       }
     } catch (error) {
-      console.log('splits error:', error);
+      // console.log('splits error:', error);
     }
     //////////
     //bustouts and blackjack outs
@@ -81,7 +81,7 @@ class App extends React.Component {
         }
       }
     } catch (e) {
-      console.log('error was thrown in third try: ', e);
+      // console.log('error was thrown in third try: ', e);
     }
 
   }
@@ -163,7 +163,7 @@ class App extends React.Component {
   }
 
   generateShuffledShoe = () => {
-    var decks = 2;
+    var decks = 8;
 
     var shuffledDeck = [];
 
@@ -275,6 +275,7 @@ class App extends React.Component {
       currentBet,
       movesArray,
       handsPriorToDeal,
+      count,
                           } = this.props.appState;
 
 
@@ -314,6 +315,24 @@ class App extends React.Component {
         splitButton = <div className='BetButton' onClick={this.clickSplit}>Split</div>;
       }
     }
+    var trainerFeedback;
+    try {
+      if (movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].hasOwnProperty('actualMove') && movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].properMove == movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].actualMove) {
+        trainerFeedback = <div className='BetButton trainerRight' >Good Job!</div>
+      } else {
+        trainerFeedback = <div className='BetButton trainerWrong' >{`Wrong move. Should have picked: ${movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].properMove}`}</div>
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+
+    var countDisplay = 
+      <div className='BetButton countDisplay'>
+        {count}
+      </div>
+
+
+
 
     if (playerHands.length == 0) {
       allTheButtons = betButton
@@ -328,10 +347,10 @@ class App extends React.Component {
             {standButton}
           </div>
           <div className='buttonArea'>
-            <pre>
-              {JSON.stringify(movesArray[handsPriorToDeal + currentHand])}
-            </pre>
+            {trainerFeedback}
+            {countDisplay}
           </div>
+          
         </div>
         
     }
@@ -367,3 +386,51 @@ class App extends React.Component {
 }
 
 export default App;
+
+/*
+    try {
+      console.log('movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2]:', JSON.stringify(movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2]));
+      if (movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].hasOwnProperty('actualMove')) {
+        if (
+          movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].properMove
+          !=
+          movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].actualMove
+        ) {
+          console.log('trainerFeedBack: is wrong');
+          var correctMove = JSON.stringify(movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].properMove);
+
+          var trainerFeedback = <p>That was the wrong move. correct move is {correctMove}</p>
+
+        } else {
+          console.log('trainerFeedBack: is correct');
+          var trainerFeedback = <p>Keep up the good work! </p>
+      }
+    }
+
+
+    } catch (e) {
+      console.log('movesArray not yet defined');
+      console.warn(e);
+    }
+
+*/
+
+/*     if (movesArray.length != 0) {
+      if (typeof movesArray[handsPriorToDeal + currentHand].movesThisHand != 'undefined') {
+        if (movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2]) {
+          if (movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].properMove == movesArray[handsPriorToDeal + currentHand].movesThisHand[movesArray[handsPriorToDeal + currentHand].movesThisHand.length - 2].actualMove) {
+            var trainerFeedBack = <p>Good Job!</p>
+          } else {
+            var trainerFeedBack = <p>Wrong move.</p>
+          }
+        } else {
+          var trainerFeedBack = <p>there is NOT a prior move for this hand</p>
+        }
+      } else {
+        var trainerFeedback = <p>there are NOT moves for this hand</p>
+      }
+    } else {
+      var trainerFeedback = <p>there are NOT items in the moves array.</p>
+    }
+
+    */

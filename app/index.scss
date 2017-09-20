@@ -1,11 +1,12 @@
 $green: #40C440;
+$red: #BE4E4E;
 /* Header */
 .Header {
   display: flex;
   width: 100vw;
   height: 8vh;
   align-items: center;
-  border-bottom: 1px solid black;
+  border-bottom: .5vh solid black;
   justify-content: flex-start;
   font-family: sans-serif;
   font-weight: bold;
@@ -44,7 +45,7 @@ $green: #40C440;
     width: 90vw;
     margin-top: 1vh;
     // border: 5px solid white;
-    border-radius: 5px;
+    border-radius: .5vh;
     
     .resultPanel {
       color: white;
@@ -83,6 +84,7 @@ button {
 .BetButtonContainer {
   display: flex;
   justify-content: center;
+
 }
 
 .BetButton {
@@ -101,7 +103,7 @@ button {
 }
 
 .ClearButton {
-  background: #BE4E4E;
+  background: $red;
 }
 
 .BettingArea {
@@ -113,18 +115,40 @@ button {
   }
 }
 //Betting Area Above
+//trainer below
+.trainerGood {
+  margin: 1vh; 
+}
+
+.trainerWrong {
+  background: $red;
+  width: 40vw;
+  margin: 1vh;
+}
+
+//trainer above
+//count below
+.countDisplay {
+  background: purple;
+  color: purple;
+}
+
+.countDisplay:hover {
+    color: white;
+}
+//count Above
 
 //chipbank below
 .ChipBank {
   position: absolute;
-  bottom: 1vh;
+  top: 2vh;
   padding: none;
   margin: 0 auto;
   left: 0;
   right: 0;
   height: 4vh;
   text-align: center;
-  border: 5px solid black;
+  border:  solid black;
   border-radius: 2vh;
   width: 15vw;
   background: darkblue;
@@ -141,21 +165,21 @@ button {
 }
 //chipbank above
 .seat {
-  margin: 25px;
-  border: 5px solid red;
-  border-radius: 50px;
-  min-width: 300px;
-  min-height: 300px;
+  margin: 23vh;
+  border: 2.5vh solid red;
+  border-radius: 5vh;
+  min-width: 15vw;
+  min-height: 27vh;
 
 }
 
 .hand {
-  margin: 20px;
-  padding: 20px;
-  border: 5px solid white;
-  border-radius: 5px;
-  min-height: 150px;
-  min-width: 200px;
+  margin: 2vh;
+  padding: 2vh;
+  border: .5vh solid white;
+  border-radius: .5vh;
+  min-height: 13vh;
+  min-width: 10vw;
 }
 
 .buttonArea {
@@ -163,14 +187,10 @@ button {
   display: flex;
   width: 100vw;
   justify-content: center;
+  
 }
-
-input {
-  width: 100px;
-}
-
 .active {
-  border: 5px solid gold;
+  border: .5vh solid gold;
 
 }
 

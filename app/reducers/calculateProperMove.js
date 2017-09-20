@@ -21,6 +21,20 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
     aceCount > 0 ? isAces = true : null;
   }
 
+  if (playersHand.cards.length != 2 && isAces) {
+    console.log('inside isAces checker multiple cards')
+    var valueWithoutAces = 0;
+    playersHand.cards.forEach( (card) => {
+      if (card.name != 'ace') {
+        valueWithoutAces += card.value;
+      }
+    })
+    if (valueWithoutAces > 10) {
+      console.log('turning off isAces');
+      isAces = false;
+    }
+  }
+
   if (!isSplitable && !isAces) {
     if (playersHand.handValue >= 17) {
       is17OrOver = true;
@@ -292,7 +306,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
     switch (dealersUpCard) {
       case 11:
       case 10:
-        switch (playersHand.handValue) {
+        switch (playersHand.cards[0].value) {
           case 11:
             properMove = 'split';
             break;
@@ -317,7 +331,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
         break;
       case 9:
       case 8:
-        switch (playersHand.handValue) {
+        switch (playersHand.cards[0].value) {
           case 11:
             properMove = 'split';
             break;
@@ -345,7 +359,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
         }
         break;
       case 7:
-        switch (playersHand.handValue) {
+        switch (playersHand.cards[0].value) {
           case 11:
             properMove = 'split';
             break;
@@ -376,7 +390,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
         break;
       case 6:
       case 5:
-        switch (playersHand.handValue) {
+        switch (playersHand.cards[0].value) {
           case 11:
             properMove = 'split';
             break;
@@ -404,7 +418,7 @@ export default function calculateProperMove(dealersHand, playersHand, handMoves 
       case 4:
       case 3:
       case 2:
-        switch (playersHand.handValue) {
+        switch (playersHand.cards[0].value) {
           case 11:
             properMove = 'split';
             break;

@@ -11,6 +11,7 @@ export const soloReducerDefaultState = {
   dealersTurn: false,
   movesArray: [],
   handsPriorToDeal: 0,
+  count: 0,
 };
 
 const soloReducer = (state = soloReducerDefaultState, action) => {
@@ -63,13 +64,17 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         dealerHands,
       }
     case 'DEAL_TO_DEALER':
-      var { shoe, shoePosition, dealerHands, dealersTurn, playerHands, } = state;
+      var { shoe, shoePosition, dealerHands, dealersTurn, playerHands, count, } = state;
       var card = shoe[shoePosition];
+      
       if (action.flip) {
         card.side = 'back';
       }
       dealerHands[0].cards.push(card);
-
+      if (dealerHands[0].cards.length != 2 ) {
+        count += card.hiLo;
+        console.log('adding dealers card to count')
+      }
       ////
       var hand = dealerHands[0].cards;
       var handValue = 0;
@@ -120,13 +125,16 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         shoePosition: shoePosition + 1,
         dealerHands,
         dealersTurn,
+        count,
       }    
       case 'DEAL_TO_PLAYER':
       var { shoe, shoePosition, playerHands, currentHand,
-         dealersTurn, dealerHands, movesArray, handsPriorToDeal  } = state;
+         dealersTurn, dealerHands, movesArray, handsPriorToDeal, count  } = state;
       var card = shoe[shoePosition];
       var movesArrayCurrentHand = currentHand;
       playerHands[currentHand].cards.push(card);
+      count += card.hiLo;
+      console.log('adding players card to count')
       ////
       var hand = playerHands[currentHand].cards;
       var handValue = 0;
@@ -146,11 +154,11 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
 
       });
 
-      if (playerHands[currentHand].cards.length == 3) {
-        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[movesArrayCurrentHand].cards.length - 3].ActualMove = 'hit';
+      if (playerHands[movesArrayCurrentHand].cards.length > 2) {
+        movesArray[movesArrayCurrentHand + handsPriorToDeal].movesThisHand[movesArray[movesArrayCurrentHand + handsPriorToDeal].movesThisHand.length -1].actualMove = 'hit';
       }
       if (action.doubleDown == true) {
-        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[movesArrayCurrentHand].cards.length - 3].ActualMove = 'doubleDown';
+        movesArray[movesArrayCurrentHand + handsPriorToDeal].movesThisHand[movesArray[movesArrayCurrentHand + handsPriorToDeal].movesThisHand.length - 1].actualMove = 'doubleDown';
         playerHands[currentHand].status = 'standing';
         playerHands[currentHand].betAmount = (playerHands[currentHand].betAmount * 2)
         if (currentHand == playerHands.length - 1) {
@@ -191,11 +199,18 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         }
       }
 
-      //if 2nd card, make new moveArray, if more than 2, update it
-      if (playerHands[currentHand].cards.length == 2) {
+      //if 2nd card, make new moveArray, unless it already exists => define it
+      //else, if more than 2 cards || already defined, => update it
+
+
+      if (playerHands[currentHand].cards.length == 2 && typeof movesArray[handsPriorToDeal + currentHand] === 'undefined') {
         movesArray.push(calculateProperMove(dealerHands[0], playerHands[movesArrayCurrentHand], movesArray[handsPriorToDeal + movesArrayCurrentHand]));
-      } else if (playerHands[currentHand].cards.length > 2) {
-        movesArray[currentHand + handsPriorToDeal] = calculateProperMove(dealerHands[0], playerHands[currentHand], movesArray[handsPriorToDeal + movesArrayCurrentHand]);
+        console.log('making new movesArray item');
+      } else if (playerHands[currentHand].cards.length > 2 || typeof movesArray[handsPriorToDeal + currentHand] !== 'undefined' ) {
+        console.log('updating existing movesArray item');
+        movesArray[movesArrayCurrentHand + handsPriorToDeal] = calculateProperMove(dealerHands[0], playerHands[movesArrayCurrentHand], movesArray[handsPriorToDeal + movesArrayCurrentHand]);
+      } else {
+        console.warn('deal movesArray create/update fell thru');
       }
       
 
@@ -206,11 +221,14 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
         currentHand,
         dealersTurn,
         movesArray: movesArray,
+        count,
       }
       case 'PLAYER_STANDS':
         var { currentHand, playerHands, dealersTurn, handsPriorToDeal, movesArray} = state;
         playerHands[currentHand].status = 'standing'
-        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].ActualMove = 'stand';
+        movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].actualMove = 'stand';
+
+        movesArray[currentHand + handsPriorToDeal].movesThisHand.push({playersHandValue: playerHands[currentHand].handValue, properMove: 'none'});
 
         if (currentHand == playerHands.length - 1) {
           dealersTurn = true;
@@ -223,12 +241,17 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           currentHand,
           playerHands,
           dealersTurn,
-          moveArray: movesArray,
+          movesArray: movesArray,
         }
       case 'SET_DEALERS_TURN':
+      var { count, dealerHands } = state;
+      var card = dealerHands[0].cards[1];
+      count += card.hiLo;
+      console.log('adding dealers second card to count')
         return {
           ...state,
           dealersTurn: true,
+          count,
         }
       case 'CLEAR_TABLE':
       var {playerHands, dealerHands, dealersTurn, currentHand, chipBank, handsPriorToDeal} = state;
@@ -245,7 +268,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
       case 'SPLIT':
       var { currentHand, playerHands, currentBet, chipBank, movesArray, handsPriorToDeal } = state;
         
-      movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].ActualMove = 'split';
+      movesArray[currentHand + handsPriorToDeal].movesThisHand[playerHands[currentHand].cards.length - 2].actualMove = 'split';
 
         var handToSplit = {
           ...playerHands[currentHand]
@@ -263,7 +286,7 @@ const soloReducer = (state = soloReducerDefaultState, action) => {
           betAmount: currentBet,
           handValue: 0,
           moveArray: movesArray,
-
+          handsPriorToDeal: handsPriorToDeal,
         }
 
         chipBank -= currentBet;
